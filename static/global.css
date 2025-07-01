@@ -1,0 +1,31 @@
+
+.jumbotron {
+  background-color: #008000;
+  color: #fff;
+  padding: 100px 25px;
+}
+footer{
+    background-color: #008000;
+     color: #fff;
+}
+
+
+.container-fluid {
+  padding: 60px 50px;
+}
+.container-fluid-footer {
+  padding: 30px 25px;
+}
+
+.logo {
+  font-size: 200px;
+   height: 200px;   
+  width: 200px;   
+  object-fit: contain;
+}
+@media screen and (max-width: 768px) {
+  .col-sm-4 {
+    text-align: center;
+    margin: 25px 0;
+  }
+}

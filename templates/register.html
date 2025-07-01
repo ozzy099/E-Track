@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "loginNavigation.html" %}
+{% include "flashAlerts.html" %}
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="shadow p-5 bg-white rounded" style="min-width: 350px;">
+        <h1 class="mb-4 text-center" id="header">Add a new user</h1>
+        {% if error %}
+            <div class="mb-3 text-danger">{{ error }}</div>
+        {% endif %}
+        <form action="/register" method="POST">
+            {{form.hidden_tag()}}
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label"> {{form.firstName.label(class="form-label")}}</label>
+                <div class="col-sm-8">
+                    {{form.firstName(class="form-control")}}
+                    {% for error in form.firstName.errors %}
+                        <div class="form-text text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label"> {{form.lastName.label}}</label>
+                <div class="col-sm-8">
+                    {{form.lastName(class="form-control")}}
+                    {% for error in form.lastName.errors %}
+                        <div class="form-text text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label"> {{form.username.label}}</label>
+                <div class="col-sm-8">
+                    {{form.username(class="form-control")}}
+                    {% for error in form.username.errors %}
+                        <div class="form-text text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="mb-3 row" id="passwordField">
+                <label class="col-sm-4 col-form-label"> {{form.password.label}}</label>
+                <div class="col-sm-8">
+                    {{form.password(class="form-control")}}
+                    {% for error in form.password.errors %}
+                        <div class="form-text text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <div class="col-sm-8">
+                    {{form.accessRole}}
+                </div>
+            </div>
+
+            <div class="mb-3 d-flex justify-content-center gap-2">
+                {{ form.submit(class="btn btn-sm btn-primary") }}
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

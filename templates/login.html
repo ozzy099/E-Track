@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "loginNavigation.html" %}
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="shadow p-5 bg-white rounded" style="min-width: 350px;">
+        <h1 class="mb-4 text-center" id="header">Login</h1>
+        {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        <form action="/login" method="post">
+            {{form.hidden_tag()}}
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">{{form.username.label}}</label>
+                <div class="col-sm-8">
+                    {{form.username(class="form-control")}}
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">{{form.password.label}}</label>
+                <div class="col-sm-8">
+                    {{form.password(class="form-control")}}
+                </div>
+            </div>
+            <div class="mb-3 text-center">
+                {{form.submit()}}
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

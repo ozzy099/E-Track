@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "standardNavigation.html" %}
+{% include "flashAlerts.html" %}
+<div class="container mt-4">
+    <h1>Active Items</h1>
+    <a href="{{ url_for('item.addItem')}}" class="btn btn-primary mb-3">Add a new item</a>
+    <table class="table table-striped table-bordered">
+      <thead class="table-light">
+        <tr>
+           <th>Item ID</th>
+            <th>Vendor Name</th>
+            <th>Username </th>
+            <th>Item Category </th>
+            <th>Expiry Date</th>
+            <th>Status</th>
+            <th>User Notes</th>
+            <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for item in items %}
+        <tr>
+          <td>{{ item.itemID}}</td>
+          <td>{{item.vendorName}}</td>
+          <td>{{item.username}}</td>
+          <td>{{item.itemCategoryName}}</td>
+          <td>{{item.expiryDate}}</td>
+          <td>{{item.status}}</td>
+          <td>{{item.userNotes}}</td>
+          <td>
+              <a href="{{ url_for('item.updateItem', itemID=item.itemID)}}?mode=edit&resource=item" class="btn btn-sm btn-secondary"> Edit </a>
+              {% if current_user.accessRole == AccessRoleEnum.Admin %}
+                  <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setDeleteID('{{item.itemID}}')">Delete</button>
+              {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+</div>
+{% if current_user.accessRole == AccessRoleEnum.Admin %}
+<div class="container mt-4">
+<h1>Deleted Items</h1>
+{% if deletedItems|length > 0 %}
+  <table class="table table-striped table-bordered">
+    <thead class="table-light">
+      <tr>
+        <th>Item ID</th>
+        <th>Vendor Name</th>
+        <th>Username </th>
+        <th>Item Category </th>
+        <th>Expiry Date</th>
+        <th>Status</th>
+        <th>User Notes</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in deletedItems %}
+        <tr>
+          <td>{{ item.itemID}}</td>
+            <td>{{item.vendorName}}</td>
+            <td>{{item.username}}</td>
+            <td>{{item.itemCategoryName}}</td>
+            <td>{{item.expiryDate}}</td>
+            <td>{{item.status}}</td>
+            <td>{{item.userNotes}}</td>
+            <td>
+              <a href="{{ url_for('item.restoreItem', itemID=item.itemID)}}" class="btn btn-sm btn-primary">Restore</a>
+            </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    {% include "noneDeletedAlert.html" %}
+  {% endif %}
+</div>
+{% endif %}
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete Item</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="itemToDelete">
+        <p>Are you sure you want to delete item # : <strong id="itemIDPlaceholder"></strong>?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="confirmDelete()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+     function setDeleteID(itemID) {
+        document.getElementById('itemToDelete').value = itemID;
+        document.getElementById('itemIDPlaceholder').textContent = itemID;
+    }
+    function confirmDelete() {
+        const itemID = document.getElementById('itemToDelete').value;
+        window.location.href = "/items/delete/" + itemID;
+    }
+</script>
+{% endblock %}

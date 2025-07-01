@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "standardNavigation.html" %}
+{% include "flashAlerts.html" %}
+<div class="container mt-4">
+  <h1>Active Vendors</h1>
+  <a href="{{ url_for('vendor.addVendor')}}" class="btn btn-primary mb-3">Add a new vendor</a>
+  <table class="table table-striped table-bordered">
+    <thead class="table-light">
+      <tr>
+        <th>Vendor ID</th>
+        <th>Vendor</th>
+        <th>Sustainability Certified</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for vendor in vendors %}
+        <tr>
+          <td>{{vendor.vendorID}}</td>
+          <td>{{vendor.vendorName}}</td>
+          <td>{{vendor.sustainabilityCertified}}</td>
+          <td>
+            <a href="{{ url_for('vendor.updateVendor', vendorID=vendor.vendorID)}}?mode=edit&resource=vendor" class="btn btn-sm btn-secondary">Edit</a>
+            {% if current_user.accessRole == AccessRoleEnum.Admin %}
+            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setDeleteID('{{vendor.vendorID}}', '{{vendor.vendorName}}')">Delete</button>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% if current_user.accessRole == AccessRoleEnum.Admin %}
+<div class="container mt-4">
+  <h1>Deleted Vendors</h1>
+  {% if deletedVendors|length > 0 %}
+      <table class="table table-striped table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th>Vendor ID</th>
+            <th>Vendor</th>
+            <th>Sustainability Certified</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for vendor in deletedVendors %}
+          <tr>
+            <td>{{vendor.vendorID}}</td>
+            <td>{{vendor.vendorName}}</td>
+            <td>{{vendor.sustainabilityCertified}}</td>
+            <td>
+              <a href="{{ url_for('vendor.restoreVendor', vendorID=vendor.vendorID)}}" class="btn btn-sm btn-primary">Restore</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    {% include "noneDeletedAlert.html" %}
+   {% endif %}
+</div>
+{% endif %}
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete Vendor</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="vendorToDelete">
+        <p>Are you sure you want to delete <strong id="vendorNamePlaceholder"></strong>?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="confirmDelete()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  function setDeleteID(vendorID, vendorName) {
+    document.getElementById('vendorToDelete').value = vendorID;
+    document.getElementById('vendorNamePlaceholder').textContent = vendorName;
+  }
+  function confirmDelete() {
+    const vendorID = document.getElementById('vendorToDelete').value;
+    window.location.href = "/vendors/delete/" + vendorID;
+  }
+</script>
+{% endblock %}

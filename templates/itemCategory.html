@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "standardNavigation.html" %}
+{% include "flashAlerts.html" %}
+<div class="container mt-4">
+  <h1>Active Item Categories</h1>
+  <a href="{{ url_for('itemCategory.addItemCategory')}}" class="btn btn-primary mb-3">Add a new item Category</a>
+  <table class="table table-striped table-bordered">
+    <thead class="table-light">
+      <tr>
+        <th>Item Category ID</th>
+        <th>Item Category</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for itemCategory in itemCategories %}
+      <tr>
+        <td>{{itemCategory.itemCategoryID}} </td>
+        <td>{{itemCategory.itemCategoryName}} </td>
+        <td>
+          <a href="{{ url_for('itemCategory.updateCategory', itemCategoryID=itemCategory.itemCategoryID)}}?mode=edit&resource=category"class="btn btn-sm btn-secondary"> Edit </a>
+          {% if current_user.accessRole == AccessRoleEnum.Admin %} 
+            <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" onclick="setDeleteID('{{itemCategory.itemCategoryID}}', '{{itemCategory.itemCategoryName}}')">Delete</button>
+          {% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% if current_user.accessRole == AccessRoleEnum.Admin %}
+  <div class="container mt-4">
+    <h1>Deleted Item Categories</h1>
+    {% if deletedCategories|length > 0 %}
+      <table class="table table-striped table-bordered">
+        <thead class="table-light">
+          <tr>
+            <th>Item Category ID</th>
+            <th>Item Category</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for itemCategory in deletedCategories %}
+            <tr>
+              <td>{{itemCategory.itemCategoryID}} </td>
+              <td>{{itemCategory.itemCategoryName}} </td>
+              <td>
+                <a href="{{ url_for('itemCategory.restoreCategory', itemCategoryID=itemCategory.itemCategoryID)}}" class="btn btn-sm btn-primary">Restore</a>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        {% include "noneDeletedAlert.html" %}
+      {% endif %}
+  </div>
+{% endif %}
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="modalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete Item Category</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="itemCategoryToDelete">
+        <p>Are you sure you want to delete <strong id="itemCategoryPlaceholder"></strong>? </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="confirmDelete()">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+     function setDeleteID(itemCategoryID, itemCategoryName) {
+        document.getElementById('itemCategoryToDelete').value = itemCategoryID;
+        document.getElementById('itemCategoryPlaceholder').textContent = itemCategoryName
+    }
+    function confirmDelete() {
+        const itemCategoryID = document.getElementById('itemCategoryToDelete').value;
+        window.location.href = "/categories/delete/" + itemCategoryID;
+    }
+</script>
+{% endblock %}

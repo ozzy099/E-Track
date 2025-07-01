@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "standardNavigation.html" %}
+{% include "flashAlerts.html" %}
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="shadow p-5 bg-white rounded" style="min-width: 350px;">
+        <h1 class="mb-4 text-center" id="header">Add a new vendor</h1>
+        {% if error %}
+            <div class="mb-3 text-danger">{{ error }}</div>
+        {% endif %}
+        <form method="post">
+            {{form.hidden_tag()}}
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label"> {{form.vendorName.label(class="form-label")}}</label>
+                <div class="col-sm-8">
+                    {{form.vendorName(class="form-control")}}
+                    {% for error in form.vendorName.errors %}
+                        <div class="form-text text-danger">{{ error }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label class="col-sm-4 col-form-label">{{ form.sustainabilityCertified.label }}</label>
+                <div class="col-sm-8 d-flex align-items-center">
+                    {{ form.sustainabilityCertified(class="form-check-input") }}
+                </div>
+            </div>
+
+
+            <div class="mb-3 d-flex justify-content-center gap-2">
+                <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#leaveModal">Cancel</button>
+                {{ form.submit(class="btn btn-sm btn-primary") }}
+            </div>
+            
+            <div class="mb-3 d-flex justify-content-center gap-2">
+                <a href="{{ url_for('vendor.listVendors') }}" class="btn btn-sm btn-secondary">Return</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% include "leaveModal.html" %}
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+{% endblock %}

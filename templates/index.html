@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "standardNavigation.html" %}
+<div class="jumbotron">
+    <div class="container text-center">
+        <h1>Welcome {{firstName}}!</h1>
+        <h2>Your role: {{ current_user.accessRole }}</h2>
+    </div>
+</div>
+
+<div id="about" class="container-fluid">
+  <div class="row">
+    <div class="col-sm-8">
+      <h2>About E-track</h2><br>
+      <h4>Improve your environmental conscious one product at a time</h4><br>
+      <p>Designed to help you track your products lifecycle, E-Track allows you to: </p>
+      <ul>
+        <li>Manage items assigned to you</li>
+        <li>Manage different vendors</li>
+        <li>Manage item categories</li>
+        {% if current_user.accessRole == AccessRoleEnum.Admin %}
+          <li>Manage users</li>
+        {% endif %}
+      </ul>  
+    </div>
+    <div class="col-sm-4">
+    <span><img src="/static/E-Track.png" class="logo"></span>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid bg-light ">
+  <div class="row">
+    <div class="col-sm-4"><span class="bi bi-globe-americas logo"></span></div>
+    <div class="col-sm-8">
+      <h2>Our Values</h2><br>
+      <h4><strong>MISSION:</strong> Empower responsible technology consumption by providing accessible item lifecycle management software and promoting vendor sustainability </h4><br>
+      <p><strong>VISION:</strong> A world where everyone holds accountability for their electonics and encourages recycling to improve the environment </p>
+      <p>By using E-Track, you are contributing to a more sustainable future by prioritising reuse, repairation, recycling and donation of electronics.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
