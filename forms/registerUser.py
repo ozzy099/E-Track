@@ -9,4 +9,4 @@ class registerForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), length(min=5, max=25)], render_kw={"placeholder": "Enter username", "class": "form-control"})
     password = StringField('Password', validators=[DataRequired(), length(min=8)], render_kw={"placeholder": "Enter password", "class": "form-control"})
     accessRole = HiddenField(default='User')
-    submit = SubmitField('Add new User')
+    submit = SubmitField('Register')

@@ -69,9 +69,9 @@ itemCreateFormRoutes = ["/items/create", "/items/update/1"]
 @pytest.mark.parametrize("item_form_routes", itemCreateFormRoutes)
 def test_item_form_fields_render(client, login_user, item_form_routes):
     response = client.get(item_form_routes, follow_redirects=True)
-    assert b"Vendor ID" in response.data
-    assert b"User ID" in response.data
-    assert b"Item Category ID" in response.data
+    assert b"Vendor" in response.data
+    assert b"User" in response.data
+    assert b"Item Category" in response.data
     assert b"Expiry Date" in response.data
     assert b"Status" in response.data
     assert b"Optional User Notes" in response.data

@@ -4,7 +4,7 @@
 {% include "flashAlerts.html" %}
 <div class="container d-flex justify-content-center align-items-center vh-100">
     <div class="shadow p-5 bg-white rounded" style="min-width: 350px;">
-        <h1 class="mb-4 text-center" id="header">Add a new user</h1>
+        <h1 class="mb-4 text-center" id="header">Register new user</h1>
         {% if error %}
             <div class="mb-3 text-danger">{{ error }}</div>
         {% endif %}
@@ -54,6 +54,7 @@
             </div>
 
             <div class="mb-3 d-flex justify-content-center gap-2">
+                 <button class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#leaveModal">Cancel</button>
                 {{ form.submit(class="btn btn-sm btn-primary") }}
             </div>
         </form>
